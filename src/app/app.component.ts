@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {environment } from '../environments/environment.prod';
 import * as ex from 'excalibur';
 
 @Component({
@@ -8,7 +9,7 @@ import * as ex from 'excalibur';
 })
 export class AppComponent implements OnInit {
   title = 'dungeon-game';
-
+  Version = environment.VERSION;
   ngOnInit() {
     const engine = new ex.Engine({
         canvasElementId: 'game',
