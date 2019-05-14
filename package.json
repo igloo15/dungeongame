@@ -43,6 +43,9 @@
     "typescript": "~3.2.2",
     "write-pkg": "^4.0.0"
   },
+  "optionalDependencies": {
+    "fsevents": "*"
+  },
   "readme": "ERROR: No README data found!",
   "_id": "dungeon-game@0.1.0"
 }
