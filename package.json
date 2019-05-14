@@ -45,7 +45,7 @@
   },
   "optionalDependencies": {
     "fsevents": "*"
-  }
+  },
   "readme": "ERROR: No README data found!",
   "_id": "dungeon-game@0.1.0"
 }
