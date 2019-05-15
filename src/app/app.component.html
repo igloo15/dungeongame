@@ -1,8 +1,17 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<h1>
-  Welcome to {{ title }}! Version {{Version}}
-</h1>
-<div class="game-div">
-  <canvas id="game"></canvas>
-</div>
-<router-outlet></router-outlet>
+<mat-toolbar>
+  <span>Dungeon Game</span>
+  <span class="expanding-item"></span>
+  <span>Version: {{Version}}</span>
+</mat-toolbar>
+<mat-sidenav-container class="dungeon-container">
+  <mat-sidenav class="dungeon-sidenav">
+    <span>stuff</span>
+  </mat-sidenav>
+  <mat-sidenav-content class="dungeon-content">
+    <canvas id="game"></canvas>
+
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

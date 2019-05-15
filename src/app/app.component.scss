@@ -1,6 +1,6 @@
 .game-div {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
 }
 
 h1 {
@@ -8,4 +8,21 @@ h1 {
   position: fixed;
   top:0;
   left:50%;
+}
+
+.expanding-item {
+  flex: 1 1 auto;
+}
+
+.dungeon-sidenav {
+  display:flex;
+}
+
+.dungeon-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+.dungeon-container {
+  height: calc(100vh - 64px);
 }
