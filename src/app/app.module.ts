@@ -6,6 +6,7 @@ import { DungeonMaterialModule } from './modules/app.material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ExcaliburComponent } from './components/excalibur/excalibur.component';
+import { LocalStorageModule } from 'angular-2-local-storage';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,11 @@ import { ExcaliburComponent } from './components/excalibur/excalibur.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    DungeonMaterialModule
+    DungeonMaterialModule,
+    LocalStorageModule.forRoot({
+      prefix: 'dungeon',
+      storageType: 'localStorage'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

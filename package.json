@@ -24,6 +24,7 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
+    "angular-2-local-storage": "^3.0.2",
     "core-js": "^2.5.4",
     "excalibur": "^0.22.0",
     "fsevents": "*",
