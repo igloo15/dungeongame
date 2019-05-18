@@ -2,16 +2,15 @@
 import { UIActor, Scene, Engine, Color, Label, Vector, FontUnit, TextAlign, Events } from 'excalibur';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { DungeonService } from '../services/dungeon-service.service';
+import { DungeonGame } from './dungeon-game';
 
 export class MainMenu extends Scene {
 
   dungeonService: DungeonService;
-  constructor(engine: Engine, dungeonService: DungeonService) {
-    super(engine);
-    this.dungeonService = dungeonService;
-  }
 
   public onInitialize(engine: Engine) {
+    const dungeonEngine = engine as DungeonGame;
+    this.dungeonService = dungeonEngine.dungeonService;
     const menuActor = new UIActor({
       pos: new Vector(10, 10),
       width: 400,
