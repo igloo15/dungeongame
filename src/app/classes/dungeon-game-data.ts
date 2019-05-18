@@ -12,6 +12,6 @@ export class DungeonGameData {
         this.dungeonRooms.push(new DungeonRoom(i, j));
       }
     }
-    this.dungeonRooms[0].isDug = true;
+    this.dungeonRooms[12].isDug = true;
   }
 }
