@@ -12,7 +12,7 @@ export class GameScreen extends Scene {
     const rooms = this.dungeonEngine.dungeonService.gameData.dungeonRooms;
 
     for (const room of rooms) {
-      const actor = room.getActor();
+      const actor = room.getTile();
       this.add(actor);
     }
 

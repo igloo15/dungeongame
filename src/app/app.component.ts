@@ -11,11 +11,7 @@ export class AppComponent implements OnInit {
   title = 'dungeon-game';
   Version = environment.VERSION;
   ngOnInit() {
-    const engine = new ex.Engine({
-        canvasElementId: 'game',
-        displayMode: ex.DisplayMode.Container
-    });
-    engine.start();
+
   }
 
 }
