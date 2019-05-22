@@ -8,9 +8,12 @@ export class MainMenu extends Scene {
 
   dungeonService: DungeonService;
 
+  constructor(engine: Engine, service: DungeonService) {
+    super(engine);
+    this.dungeonService = service;
+  }
+
   public onInitialize(engine: Engine) {
-    const dungeonEngine = engine as DungeonGame;
-    this.dungeonService = dungeonEngine.dungeonService;
     const menuActor = new UIActor({
       pos: new Vector(10, 10),
       width: 400,

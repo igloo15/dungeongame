@@ -2,6 +2,7 @@
 import { Vector, UIActor, Color, Engine, Sprite } from 'excalibur';
 import { DungeonGame } from './dungeon-game';
 import { text } from '@angular/core/src/render3';
+import { DungeonService } from '../services/dungeon-service.service';
 
 export class DungeonRoom {
   x: number;
@@ -19,8 +20,8 @@ export class DungeonRoom {
     this.isDug = isDug;
   }
 
-  getTile(): DungeonTile {
-    return new DungeonTile(this);
+  getTile(service: DungeonService): DungeonTile {
+    return new DungeonTile(this, service);
   }
 
 }
@@ -29,14 +30,16 @@ export class DungeonTile extends UIActor {
   static width = 64;
   static height = 64;
   room: DungeonRoom;
+  service: DungeonService;
 
-  constructor(room: DungeonRoom) {
+  constructor(room: DungeonRoom, service: DungeonService) {
     super({
       pos: new Vector(100 + (room.x * DungeonTile.width), room.y * DungeonTile.height),
       width: DungeonTile.width,
       height: DungeonTile.height
     });
     this.room = room;
+    this.service = service;
     this.enableCapturePointer = true;
     this.on('pointerup', ev => {
       this.room.isDug = true;
@@ -44,8 +47,7 @@ export class DungeonTile extends UIActor {
   }
 
   onInitialize(engine: Engine) {
-    const dungeonEngine = engine as DungeonGame;
-    for (const [key, texture] of Object.entries(dungeonEngine.resources)) {
+    for (const [key, texture] of Object.entries(this.service.resources)) {
 
       this.addDrawing(key, new Sprite(texture, 0, 0, 64, 64));
     }

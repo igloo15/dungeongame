@@ -1,36 +1,35 @@
 
 import { Engine, DisplayMode, Input, Loader, Texture, Debug } from 'excalibur';
 import { MainMenu } from './mainmenu';
-import { LocalStorageService } from 'angular-2-local-storage';
 import { DungeonService } from '../services/dungeon-service.service';
 import { GameScreen } from './game-screen';
 import { Resources } from './resources';
 
-export class DungeonGame extends Engine {
+export class DungeonGame {
   dungeonService: DungeonService;
-  resources: Resources;
+  engine: Engine;
 
   constructor(dungeonService: DungeonService) {
-    super({
+    this.engine = new Engine({
       canvasElementId: 'game',
       displayMode: DisplayMode.Container,
       pointerScope: Input.PointerScope.Canvas
     });
-    this.isDebug = true;
+    this.engine.isDebug = true;
     this.dungeonService = dungeonService;
   }
 
   public initialize() {
-    this.add('mainmenu', new MainMenu(this));
-    this.add('gamescreen', new GameScreen(this));
+    this.engine.add('mainmenu', new MainMenu(this.engine, this.dungeonService));
+    this.engine.add('gamescreen', new GameScreen(this.engine, this.dungeonService));
   }
 
   public start() {
     console.log('starting game');
     const loader = this.getLoader();
-    return super.start(loader).then((data) => {
+    return this.engine.start(loader).then((data) => {
       console.log(data);
-      this.goToScene('mainmenu');
+      this.engine.goToScene('mainmenu');
     },
     error => {
       console.log(error);
@@ -39,9 +38,8 @@ export class DungeonGame extends Engine {
 
   public getLoader() {
     const loader = new Loader();
-    this.resources = new Resources();
 
-    for (const [key, loadable] of Object.entries(this.resources)) {
+    for (const [key, loadable] of Object.entries(this.dungeonService.resources)) {
       loader.addResource(loadable);
     }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { DungeonGameData } from '../classes/dungeon-game-data';
+import { Resources } from '../classes/resources';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +9,10 @@ import { DungeonGameData } from '../classes/dungeon-game-data';
 export class DungeonService {
   public gameData: DungeonGameData;
   private gameDataKey = 'game-data';
+  public resources = new Resources();
 
-  constructor(private localStorageService: LocalStorageService) { }
+  constructor(private localStorageService: LocalStorageService) {
+  }
 
   newGame() {
     this.gameData = new DungeonGameData('test-game');
