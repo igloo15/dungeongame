@@ -1,6 +1,6 @@
 {
   "name": "dungeon-game",
-  "version": "0.3.0-dev.1",
+  "version": "0.3.0-dev.10",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -51,5 +51,5 @@
     "fsevents": "*"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "dungeon-game@0.1.0"
+  "_id": "dungeon-game@0.3.0-dev.1"
 }

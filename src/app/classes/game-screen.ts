@@ -50,7 +50,7 @@ export class GameScreen extends Scene {
   }
 
   onActivate() {
-    this.camera.move(new Vector(0, 0), 0);
+    this.camera.move(this.dungeonService.gameData.dungeonRooms[221].getPos(), 0);
   }
 
   onDeactivate() {}

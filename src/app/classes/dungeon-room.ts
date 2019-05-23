@@ -1,7 +1,6 @@
 
 import { Vector, Actor, Color, Engine, Sprite } from 'excalibur';
 import { DungeonGame } from './dungeon-game';
-import { text } from '@angular/core/src/render3';
 import { DungeonService } from '../services/dungeon.service';
 
 
@@ -20,6 +19,10 @@ export class DungeonRoom {
 
   getTile(service: DungeonService): DungeonTile {
     return new DungeonTile(this, service);
+  }
+
+  getPos(): Vector {
+    return new Vector((this.x * DungeonTile.width), this.y * DungeonTile.height);
   }
 
 }
@@ -53,10 +56,6 @@ export class DungeonTile extends Actor {
 
       this.addDrawing(key, new Sprite(texture, 0, 0, 64, 64));
     }
-  }
-
-  getVector(): Vector {
-    return new Vector((this.x * DungeonTile.width), this.y * DungeonTile.height);
   }
 
   public update(engine: Engine, delta: number) {
