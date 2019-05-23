@@ -13,9 +13,9 @@ export class DungeonGame {
     this.engine = new Engine({
       canvasElementId: 'game',
       displayMode: DisplayMode.Container,
-      pointerScope: Input.PointerScope.Canvas
+      pointerScope: Input.PointerScope.Canvas,
+      suppressPlayButton: true
     });
-    this.engine.isDebug = true;
     this.dungeonService = dungeonService;
   }
 
