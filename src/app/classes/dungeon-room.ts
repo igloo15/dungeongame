@@ -1,18 +1,16 @@
 
-import { Vector, UIActor, Color, Engine, Sprite } from 'excalibur';
+import { Vector, Actor, Color, Engine, Sprite } from 'excalibur';
 import { DungeonGame } from './dungeon-game';
 import { text } from '@angular/core/src/render3';
-import { DungeonService } from '../services/dungeon-service.service';
+import { DungeonService } from '../services/dungeon.service';
+
+
 
 export class DungeonRoom {
   x: number;
   y: number;
   isDug: boolean;
   isExplored = false;
-  northOpen = false;
-  southOpen = false;
-  westOpen = false;
-  eastOpen = false;
 
   constructor(x: number, y: number, isDug: boolean = false) {
     this.x = x;
@@ -26,10 +24,14 @@ export class DungeonRoom {
 
 }
 
-export class DungeonTile extends UIActor {
+export class DungeonTile extends Actor {
   static width = 64;
   static height = 64;
   room: DungeonRoom;
+  northRoom: DungeonRoom;
+  southRoom: DungeonRoom;
+  eastRoom: DungeonRoom;
+  westRoom: DungeonRoom;
   service: DungeonService;
 
   constructor(room: DungeonRoom, service: DungeonService) {
@@ -67,17 +69,17 @@ export class DungeonTile extends UIActor {
       this.color = Color.Gray;
     } else if (this.room.isDug) {
       let textureName = '';
-      if (this.room.northOpen) {
-        textureName += 'N_';
+      if (this.northRoom.isDug) {
+        textureName += 'n';
       }
-      if (this.room.southOpen) {
-        textureName += 'S_';
+      if (this.southRoom.isDug) {
+        textureName += 's';
       }
-      if (this.room.westOpen) {
-        textureName += 'W_';
+      if (this.westRoom.isDug) {
+        textureName += 'w';
       }
-      if (this.room.eastOpen) {
-        textureName += 'E_';
+      if (this.eastRoom.isDug) {
+        textureName += 'e';
       }
       if (textureName) {
         textureName += 'Open';

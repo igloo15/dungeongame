@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DungeonGame } from '../../classes/dungeon-game';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { DungeonService } from 'src/app/services/dungeon-service.service';
+import { DungeonService } from 'src/app/services/dungeon.service';
 
 @Component({
   selector: 'app-excalibur',

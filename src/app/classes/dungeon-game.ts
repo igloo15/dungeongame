@@ -1,7 +1,7 @@
 
-import { Engine, DisplayMode, Input, Loader, Texture, Debug } from 'excalibur';
+import { Engine, DisplayMode, Input, Loader, Texture, Debug, Color } from 'excalibur';
 import { MainMenu } from './mainmenu';
-import { DungeonService } from '../services/dungeon-service.service';
+import { DungeonService } from '../services/dungeon.service';
 import { GameScreen } from './game-screen';
 import { Resources } from './resources';
 
@@ -14,7 +14,8 @@ export class DungeonGame {
       canvasElementId: 'game',
       displayMode: DisplayMode.Container,
       pointerScope: Input.PointerScope.Canvas,
-      suppressPlayButton: true
+      suppressPlayButton: true,
+      backgroundColor: Color.Black
     });
     this.dungeonService = dungeonService;
   }

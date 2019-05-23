@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { DungeonGameData } from '../classes/dungeon-game-data';
 import { Resources } from '../classes/resources';
+import { DungeonRoom } from '../classes/dungeon-room';
 
 @Injectable({
   providedIn: 'root'
@@ -22,4 +23,9 @@ export class DungeonService {
   loadGame() {
     this.gameData = this.localStorageService.get<DungeonGameData>(this.gameDataKey);
   }
+
+  getAdjacentRooms(room: DungeonRoom) {
+
+  }
+
 }
