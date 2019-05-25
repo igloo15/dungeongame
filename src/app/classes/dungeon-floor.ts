@@ -5,8 +5,8 @@ import { JsonConvertable } from './json-convertable';
 
 export class DungeonFloor extends JsonConvertable {
   dungeonRooms: DungeonRoom[];
-  width = 500;
-  height = 500;
+  width = 200;
+  height = 200;
 
   getTileFloor(service: DungeonService) {
     return new DungeonTileFloor(this, service);

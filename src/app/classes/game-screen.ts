@@ -3,12 +3,14 @@ import { DungeonGame } from './dungeon-game';
 import { DungeonService } from '../services/dungeon.service';
 import { DungeonFloor, DungeonTileFloor } from './dungeon-floor';
 import { DungeonTile } from './dungeon-room';
+import { DebugUI } from './debug-ui';
 
 export class GameScreen extends Scene {
   dungeonService: DungeonService;
   previousMouseSpot: Vector;
   currentZoom = 1.0;
   currentFloor: DungeonTileFloor;
+  boundingEasing = DungeonTile.width;
 
   constructor(engine: Engine, service: DungeonService) {
     super(engine);
@@ -22,6 +24,8 @@ export class GameScreen extends Scene {
     this.currentFloor.intialize();
 
     this.addTileMap(this.currentFloor);
+    this.add(new DebugUI(this));
+    this.dumpInfo(engine);
   }
 
   update(engine: Engine, delta: number) {
@@ -37,17 +41,15 @@ export class GameScreen extends Scene {
 
   onDeactivate() {}
 
+  dumpInfo(engine: Engine) {
+
+  }
+
   updateDragging(engine: Engine) {
     if (engine.input.pointers.primary.isDragging) {
       if (this.previousMouseSpot) {
-        const deltaX = (engine.input.pointers.primary.lastPagePos.x - this.previousMouseSpot.x) / this.currentZoom;
-        const deltaY = (engine.input.pointers.primary.lastPagePos.y - this.previousMouseSpot.y) / this.currentZoom;
-        const cameraSpot = this.camera.pos;
-        const newCameraSpot = new Vector(cameraSpot.x - deltaX, cameraSpot.y - deltaY);
-        if (newCameraSpot.x > (engine.canvasWidth) && newCameraSpot.x < (this.currentFloor.pageWidth - engine.canvasWidth) &&
-          newCameraSpot.y > engine.canvasHeight && newCameraSpot.y < (this.currentFloor.pageHeight - engine.canvasHeight)) {
-          this.camera.move(newCameraSpot, 0);
-        }
+        const newCameraSpot = new Vector(this.getDragX(engine), this.getDragY(engine));
+        this.camera.move(newCameraSpot, 0);
       }
       this.previousMouseSpot = engine.input.pointers.primary.lastPagePos;
     }
@@ -55,6 +57,25 @@ export class GameScreen extends Scene {
     if (engine.input.pointers.primary.isDragEnd) {
       this.previousMouseSpot = null;
     }
+  }
+
+  getDragX(engine: Engine) {
+    const deltaX = (engine.input.pointers.primary.lastPagePos.x - this.previousMouseSpot.x) / this.currentZoom;
+    return this.getDrag(this.currentFloor.pageWidth, engine.canvasWidth / 2, deltaX, this.camera.pos.x);
+  }
+
+  getDragY(engine: Engine) {
+    const deltaY = (engine.input.pointers.primary.lastPagePos.y - this.previousMouseSpot.y) / this.currentZoom;
+    return this.getDrag(this.currentFloor.pageHeight, engine.canvasHeight / 2, deltaY, this.camera.pos.y);
+  }
+
+  getDrag(pageSize: number, canvasSize: number, delta: number, current: number) {
+    const max = (pageSize - (canvasSize / this.currentZoom) + this.boundingEasing);
+    const min = (canvasSize / this.currentZoom) - this.boundingEasing;
+    let newCurrent = current - delta;
+    newCurrent = Math.min(newCurrent, max);
+    newCurrent = Math.max(newCurrent, min);
+    return newCurrent;
   }
 
   setupZooming(engine: Engine) {
