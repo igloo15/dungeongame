@@ -3,7 +3,6 @@ import { Engine, DisplayMode, Input, Loader, Texture, Debug, Color } from 'excal
 import { MainMenu } from './mainmenu';
 import { DungeonService } from '../services/dungeon.service';
 import { GameScreen } from './game-screen';
-import { Resources } from './resources';
 
 export class DungeonGame {
   dungeonService: DungeonService;
@@ -15,7 +14,7 @@ export class DungeonGame {
       displayMode: DisplayMode.Container,
       pointerScope: Input.PointerScope.Canvas,
       suppressPlayButton: true,
-      backgroundColor: Color.Black
+      backgroundColor: Color.Blue
     });
     this.dungeonService = dungeonService;
   }
@@ -40,9 +39,7 @@ export class DungeonGame {
   public getLoader() {
     const loader = new Loader();
 
-    for (const [key, loadable] of Object.entries(this.dungeonService.resources)) {
-      loader.addResource(loadable);
-    }
+    this.dungeonService.resources.load(loader);
 
     return loader;
   }
