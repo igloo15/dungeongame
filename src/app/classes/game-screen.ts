@@ -11,6 +11,7 @@ export class GameScreen extends Scene {
   currentZoom = 1.0;
   currentFloor: DungeonTileFloor;
   boundingEasing = DungeonTile.width;
+  notDragging = true;
 
   constructor(engine: Engine, service: DungeonService) {
     super(engine);
@@ -49,25 +50,29 @@ export class GameScreen extends Scene {
   updateDragging(engine: Engine) {
     if (engine.input.pointers.primary.isDragging) {
       if (this.previousMouseSpot) {
-        const newCameraSpot = new Vector(this.getDragX(engine), this.getDragY(engine));
-        this.camera.move(newCameraSpot, 0);
+        this.camera.move(this.getDragVector(engine), 0);
       }
+      console.log('dragging');
       this.previousMouseSpot = engine.input.pointers.primary.lastPagePos;
     }
 
     if (engine.input.pointers.primary.isDragEnd) {
       this.previousMouseSpot = null;
+      if (!this.notDragging) {
+        this.notDragging = true;
+      }
     }
   }
 
-  getDragX(engine: Engine) {
+  getDragVector(engine: Engine) {
     const deltaX = (engine.input.pointers.primary.lastPagePos.x - this.previousMouseSpot.x) / this.currentZoom;
-    return this.getDrag(this.currentFloor.pageWidth, engine.canvasWidth / 2, deltaX, this.camera.pos.x);
-  }
-
-  getDragY(engine: Engine) {
     const deltaY = (engine.input.pointers.primary.lastPagePos.y - this.previousMouseSpot.y) / this.currentZoom;
-    return this.getDrag(this.currentFloor.pageHeight, engine.canvasHeight / 2, deltaY, this.camera.pos.y);
+    if (deltaX > 0 || deltaY > 0) {
+      this.notDragging = false;
+    }
+    const x = this.getDrag(this.currentFloor.pageWidth, engine.canvasWidth / 2, deltaX, this.camera.pos.x);
+    const y = this.getDrag(this.currentFloor.pageHeight, engine.canvasHeight / 2, deltaY, this.camera.pos.y);
+    return new Vector(x, y);
   }
 
   getDrag(pageSize: number, canvasSize: number, delta: number, current: number) {
@@ -92,14 +97,14 @@ export class GameScreen extends Scene {
 
   setupMouseClicking(engine: Engine) {
     engine.input.pointers.primary.on('up', (ev: Input.PointerEvent) => {
-      if (!this.previousMouseSpot) {
-        return;
-      }
-      const x = Math.floor(ev.worldPos.x / DungeonTile.width);
-      const y = Math.floor(ev.worldPos.y / DungeonTile.height);
+      if (this.notDragging) {
+        console.log('not dragging');
+        const x = Math.floor(ev.worldPos.x / DungeonTile.width);
+        const y = Math.floor(ev.worldPos.y / DungeonTile.height);
 
-      const foundRoom = this.currentFloor.floor.getRoom(x, y);
-      console.log(foundRoom);
+        const foundRoom = this.currentFloor.floor.getRoom(x, y);
+        console.log(foundRoom);
+      }
     });
   }
 }
