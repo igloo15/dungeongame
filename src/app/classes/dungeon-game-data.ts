@@ -16,7 +16,7 @@ export class DungeonGameData extends JsonConvertable {
     floor.dungeonRooms = [];
     for (let i = 0; i < floor.width; i++) {
       for (let j = 0; j < floor.height; j++) {
-        floor.dungeonRooms.push(new DungeonRoom(i, j));
+        floor.dungeonRooms.push(new DungeonRoom(j, i));
       }
     }
     floor.dungeonRooms[floor.getCenter()].isDug = true;

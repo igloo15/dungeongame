@@ -19,6 +19,7 @@ export class GameScreen extends Scene {
 
   onInitialize(engine: Engine) {
     this.setupZooming(engine);
+    this.setupMouseClicking(engine);
     this.currentFloor = this.dungeonService.gameData.dungeonFloors[0].getTileFloor(this.dungeonService);
 
     this.currentFloor.intialize();
@@ -86,6 +87,19 @@ export class GameScreen extends Scene {
         this.camera.zoom((this.currentZoom -= zoomFactor), 0);
       }
       console.log(zoomFactor + ':' + this.currentZoom);
+    });
+  }
+
+  setupMouseClicking(engine: Engine) {
+    engine.input.pointers.primary.on('up', (ev: Input.PointerEvent) => {
+      if (!this.previousMouseSpot) {
+        return;
+      }
+      const x = Math.floor(ev.worldPos.x / DungeonTile.width);
+      const y = Math.floor(ev.worldPos.y / DungeonTile.height);
+
+      const foundRoom = this.currentFloor.floor.getRoom(x, y);
+      console.log(foundRoom);
     });
   }
 }
