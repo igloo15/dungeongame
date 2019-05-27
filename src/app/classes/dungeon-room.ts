@@ -1,8 +1,9 @@
 
-import { Vector, Actor, Color, Engine, Sprite, TileSprite } from 'excalibur';
+import { Vector, Actor, Color, Engine, Sprite, TileSprite, TileMap, Cell } from 'excalibur';
 import { DungeonGame } from './dungeon-game';
 import { DungeonService } from '../services/dungeon.service';
 import { JsonConvertable } from './json-convertable';
+import { DungeonTileFloor } from './dungeon-floor';
 
 
 
@@ -20,42 +21,117 @@ export class DungeonRoom extends JsonConvertable {
     this.isDug = isDug;
   }
 
-  getTile(service: DungeonService): DungeonTile {
-    if (!this.tile) {
-      this.tile = new DungeonTile(this, service);
-    }
-    return this.tile;
-  }
-
-  getPos(): Vector {
-    return new Vector((this.x * DungeonTile.width), this.y * DungeonTile.height);
-  }
-
-  update() {
-    this.tile.update();
+  getTile(map: DungeonTileFloor) {
+    return new DungeonTile(this, map);
   }
 }
 
 export class DungeonTile extends TileSprite {
   static width = 64;
   static height = 64;
-  room: DungeonRoom;
-  northRoom: DungeonRoom;
-  southRoom: DungeonRoom;
-  eastRoom: DungeonRoom;
-  westRoom: DungeonRoom;
-  service: DungeonService;
 
-  constructor(room: DungeonRoom, service: DungeonService) {
-    super(room.sheetId, 0);
+  private room: DungeonRoom;
+  private pos: Vector;
+  private cell: Cell;
+  private spriteIdString: string;
+
+  map: DungeonTileFloor;
+  northRoom: DungeonTile;
+  southRoom: DungeonTile;
+  eastRoom: DungeonTile;
+  westRoom: DungeonTile;
+
+  constructor(room: DungeonRoom, map: DungeonTileFloor) {
+    super(room.sheetId, 31);
     this.room = room;
-    this.service = service;
+    this.map = map;
+    this.pos = new Vector(this.room.x * DungeonTile.width, this.room.y * DungeonTile.height);
+    this.cell = map.getCell(room.x, room.y);
   }
 
-  update() {
-    this.spriteId = Math.floor(Math.random() * Math.floor(18));
+  update(propagate: boolean) {
+    this.spriteId = this.getSpriteId();
+    if (propagate) {
+      this.northRoom.update(false);
+      this.southRoom.update(false);
+      this.westRoom.update(false);
+      this.eastRoom.update(false);
+    }
+    // this.spriteId = Math.floor(Math.random() * Math.floor(18));
   }
 
   updateTexture() {
+  }
+
+  initialize() {
+    this.getCell().pushSprite(new TileSprite('0', 32));
+    this.getCell().pushSprite(this);
+    this.westRoom = this.map.getRoom(this.room.x - 1, this.room.y);
+    this.eastRoom = this.map.getRoom(this.room.x + 1, this.room.y);
+    this.northRoom = this.map.getRoom(this.room.x, this.room.y - 1);
+    this.southRoom = this.map.getRoom(this.room.x, this.room.y + 1);
+  }
+
+  getCell() {
+    return this.cell;
+  }
+
+  getPos(): Vector {
+    return this.pos;
+  }
+
+  dig() {
+    if (this.room.isDug || !this.attachedDug()) {
+      return;
+    }
+    this.room.isDug = true;
+    this.update(true);
+  }
+
+  isDug() {
+    return this.room.isDug;
+  }
+
+  anyDug() {
+    return this.room.isDug || this.attachedDug();
+  }
+
+  attachedDug() {
+    return this.checkDug(this.northRoom) || this.checkDug(this.southRoom) || this.checkDug(this.westRoom) || this.checkDug(this.eastRoom);
+  }
+
+  getSpriteId() {
+    let spriteKey = '';
+    if (this.isDug()) {
+      spriteKey += 'd';
+    } else {
+      spriteKey += 'u';
+    }
+
+    if (this.checkDug(this.northRoom)) {
+      spriteKey += 'N';
+    }
+
+    if (this.checkDug(this.southRoom)) {
+      spriteKey += 'S';
+    }
+
+    if (this.checkDug(this.westRoom)) {
+      spriteKey += 'W';
+    }
+
+    if (this.checkDug(this.eastRoom)) {
+      spriteKey += 'E';
+    }
+    this.spriteIdString = spriteKey;
+    return this.map.service.resources.getSpriteId(0, spriteKey);
+  }
+
+  checkDug(room?: DungeonTile) {
+    return room ? room.isDug() : false;
+  }
+
+  checkAnyDug(room?: DungeonTile) {
+    return room ? room.anyDug() : false;
   }
 }

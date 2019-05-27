@@ -7,24 +7,19 @@ export class DungeonFloor extends JsonConvertable {
   dungeonRooms: DungeonRoom[];
   width = 201;
   height = 201;
+  center: number;
+
+  constructor() {
+    super();
+    this.center = (Math.floor(this.width / 2) * this.height) + Math.round(this.height / 2);
+  }
 
   getTileFloor(service: DungeonService) {
     return new DungeonTileFloor(this, service);
   }
 
   getCenter() {
-    return (Math.floor(this.width / 2) * this.height) + Math.round(this.height / 2);
-  }
-
-  getCenterRoom() {
-    return this.dungeonRooms[this.getCenter()];
-  }
-
-  getRoom(x: number, y: number) {
-    if (x < this.width && y < this.height) {
-      return this.dungeonRooms[x + (y * this.height)];
-    }
-    return null;
+    return this.center;
   }
 }
 
@@ -32,8 +27,11 @@ export class DungeonTileFloor extends TileMap {
   floor: DungeonFloor;
   service: DungeonService;
   timeDelta = 0;
+  width: number;
+  height: number;
   pageWidth: number;
   pageHeight: number;
+  dungeonRooms: DungeonTile[] = [];
 
   constructor(floor: DungeonFloor, service: DungeonService) {
     super({
@@ -46,29 +44,47 @@ export class DungeonTileFloor extends TileMap {
     });
     this.floor = floor;
     this.service = service;
+    this.width = floor.width;
+    this.height = floor.height;
     this.pageWidth = floor.width * DungeonTile.width;
     this.pageHeight = floor.height * DungeonTile.height;
-  }
-
-  intialize() {
     this.service.resources.TileSheets.forEach(sheet => {
       this.registerSpriteSheet(sheet.id.toString(),
       new SpriteSheet(sheet.texture, sheet.columns, sheet.rows, DungeonTile.width, DungeonTile.height));
     });
     this.floor.dungeonRooms.forEach(room => {
-      this.getCell(room.x, room.y).pushSprite(room.getTile(this.service));
+      this.dungeonRooms.push(room.getTile(this));
+    });
+  }
+
+  intialize() {
+    this.dungeonRooms.forEach(room => {
+      room.initialize();
+      room.update(false);
     });
   }
 
 
   update(engine: Engine, delta: number) {
     super.update(engine, delta);
-    this.timeDelta += delta;
-    if (this.timeDelta % 500 === 0) {
-      this.timeDelta = 0;
-      this.floor.dungeonRooms.forEach(room => {
-        room.update();
-      });
+  }
+
+  getCenter() {
+    return this.floor.getCenter();
+  }
+
+  getCenterTile() {
+    return this.dungeonRooms[this.getCenter()];
+  }
+
+  getCenterRoom() {
+    return this.floor.dungeonRooms[this.getCenter()];
+  }
+
+  getRoom(x: number, y: number) {
+    if (x < this.width && x > -1 && y < this.height && y > -1) {
+      return this.dungeonRooms[x + (y * this.height)];
     }
+    return null;
   }
 }

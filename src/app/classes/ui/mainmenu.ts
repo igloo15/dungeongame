@@ -1,8 +1,8 @@
 
 import { UIActor, Scene, Engine, Color, Label, Vector, FontUnit, TextAlign, Events } from 'excalibur';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { DungeonService } from '../services/dungeon.service';
-import { DungeonGame } from './dungeon-game';
+import { DungeonService } from '../../services/dungeon.service';
+import { DungeonGame } from '../dungeon-game';
 
 export class MainMenu extends Scene {
 

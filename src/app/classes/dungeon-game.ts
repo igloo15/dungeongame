@@ -1,6 +1,6 @@
 
 import { Engine, DisplayMode, Input, Loader, Texture, Debug, Color } from 'excalibur';
-import { MainMenu } from './mainmenu';
+import { MainMenu } from './ui/mainmenu';
 import { DungeonService } from '../services/dungeon.service';
 import { GameScreen } from './game-screen';
 
@@ -14,7 +14,7 @@ export class DungeonGame {
       displayMode: DisplayMode.Container,
       pointerScope: Input.PointerScope.Canvas,
       suppressPlayButton: true,
-      backgroundColor: Color.Blue
+      backgroundColor: Color.Black
     });
     this.dungeonService = dungeonService;
   }

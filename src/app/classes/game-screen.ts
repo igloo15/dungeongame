@@ -1,9 +1,9 @@
-import { Scene, Engine, Events, Vector, GameEvent, Actor, Input } from 'excalibur';
+import { Scene, Engine, Events, Vector, GameEvent, Actor, Input, Color } from 'excalibur';
 import { DungeonGame } from './dungeon-game';
 import { DungeonService } from '../services/dungeon.service';
 import { DungeonFloor, DungeonTileFloor } from './dungeon-floor';
 import { DungeonTile } from './dungeon-room';
-import { DebugUI } from './debug-ui';
+import { DebugUI } from './ui/debug-ui';
 
 export class GameScreen extends Scene {
   dungeonService: DungeonService;
@@ -24,8 +24,8 @@ export class GameScreen extends Scene {
     this.currentFloor = this.dungeonService.gameData.dungeonFloors[0].getTileFloor(this.dungeonService);
 
     this.currentFloor.intialize();
-
     this.addTileMap(this.currentFloor);
+
     this.add(new DebugUI(this));
     this.dumpInfo(engine);
   }
@@ -37,8 +37,7 @@ export class GameScreen extends Scene {
   }
 
   onActivate() {
-    console.log(this.currentFloor.floor.getCenter());
-    this.camera.move(this.currentFloor.floor.getCenterRoom().getPos(), 0);
+    this.camera.move(this.currentFloor.getCenterTile().getPos(), 0);
   }
 
   onDeactivate() {}
@@ -52,7 +51,6 @@ export class GameScreen extends Scene {
       if (this.previousMouseSpot) {
         this.camera.move(this.getDragVector(engine), 0);
       }
-      console.log('dragging');
       this.previousMouseSpot = engine.input.pointers.primary.lastPagePos;
     }
 
@@ -91,20 +89,24 @@ export class GameScreen extends Scene {
       if (newZoom > 0.5 && newZoom < 2.5) {
         this.camera.zoom((this.currentZoom -= zoomFactor), 0);
       }
-      console.log(zoomFactor + ':' + this.currentZoom);
+
     });
   }
 
   setupMouseClicking(engine: Engine) {
     engine.input.pointers.primary.on('up', (ev: Input.PointerEvent) => {
       if (this.notDragging) {
-        console.log('not dragging');
+
         const x = Math.floor(ev.worldPos.x / DungeonTile.width);
         const y = Math.floor(ev.worldPos.y / DungeonTile.height);
 
-        const foundRoom = this.currentFloor.floor.getRoom(x, y);
-        console.log(foundRoom);
+        const foundRoom = this.currentFloor.getRoom(x, y);
+        this.onClick(foundRoom);
       }
     });
+  }
+
+  onClick(room: DungeonTile) {
+    room.dig();
   }
 }

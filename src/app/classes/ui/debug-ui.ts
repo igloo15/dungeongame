@@ -1,5 +1,5 @@
 import { UIActor, Vector, Color, Engine, Label, FontUnit, FontStyle } from 'excalibur';
-import { GameScreen } from './game-screen';
+import { GameScreen } from '../game-screen';
 
 export class DebugUI extends UIActor {
   fontSize = 20;
@@ -13,7 +13,7 @@ export class DebugUI extends UIActor {
 
   constructor(gameScreen: GameScreen) {
     super({
-      pos: new Vector(0, 0),
+      pos: new Vector(0, 10),
       width: 500,
       height: 500
     });
