@@ -52,10 +52,10 @@ export class DungeonTile extends TileSprite {
   update(propagate: boolean) {
     this.spriteId = this.getSpriteId();
     if (propagate) {
-      this.northRoom.update(false);
-      this.southRoom.update(false);
-      this.westRoom.update(false);
-      this.eastRoom.update(false);
+      this.updateRoom(false, this.northRoom);
+      this.updateRoom(false, this.southRoom);
+      this.updateRoom(false, this.westRoom);
+      this.updateRoom(false, this.eastRoom);
     }
     // this.spriteId = Math.floor(Math.random() * Math.floor(18));
   }
@@ -133,5 +133,11 @@ export class DungeonTile extends TileSprite {
 
   checkAnyDug(room?: DungeonTile) {
     return room ? room.anyDug() : false;
+  }
+
+  updateRoom(propagate: boolean, room?: DungeonTile) {
+    if (room) {
+      room.update(propagate);
+    }
   }
 }

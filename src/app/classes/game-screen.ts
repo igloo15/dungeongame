@@ -4,6 +4,7 @@ import { DungeonService } from '../services/dungeon.service';
 import { DungeonFloor, DungeonTileFloor } from './dungeon-floor';
 import { DungeonTile } from './dungeon-room';
 import { DebugUI } from './ui/debug-ui';
+import { KeyEvent } from 'excalibur/dist/Input';
 
 export class GameScreen extends Scene {
   dungeonService: DungeonService;
@@ -11,7 +12,9 @@ export class GameScreen extends Scene {
   currentZoom = 1.0;
   currentFloor: DungeonTileFloor;
   boundingEasing = DungeonTile.width;
+  dragThreshold = 10;
   notDragging = true;
+  debugUI: DebugUI;
 
   constructor(engine: Engine, service: DungeonService) {
     super(engine);
@@ -21,12 +24,13 @@ export class GameScreen extends Scene {
   onInitialize(engine: Engine) {
     this.setupZooming(engine);
     this.setupMouseClicking(engine);
+    this.setupKeyboard(engine);
     this.currentFloor = this.dungeonService.gameData.dungeonFloors[0].getTileFloor(this.dungeonService);
 
     this.currentFloor.intialize();
     this.addTileMap(this.currentFloor);
 
-    this.add(new DebugUI(this));
+    // this.add(new DebugUI(this));
     this.dumpInfo(engine);
   }
 
@@ -49,9 +53,14 @@ export class GameScreen extends Scene {
   updateDragging(engine: Engine) {
     if (engine.input.pointers.primary.isDragging) {
       if (this.previousMouseSpot) {
-        this.camera.move(this.getDragVector(engine), 0);
+        const newCameraSpot = this.getDragVector(engine);
+        if (newCameraSpot) {
+          this.camera.move(newCameraSpot, 0);
+          this.previousMouseSpot = engine.input.pointers.primary.lastPagePos;
+        }
+      } else {
+        this.previousMouseSpot = engine.input.pointers.primary.lastPagePos;
       }
-      this.previousMouseSpot = engine.input.pointers.primary.lastPagePos;
     }
 
     if (engine.input.pointers.primary.isDragEnd) {
@@ -67,6 +76,9 @@ export class GameScreen extends Scene {
     const deltaY = (engine.input.pointers.primary.lastPagePos.y - this.previousMouseSpot.y) / this.currentZoom;
     if (deltaX > 0 || deltaY > 0) {
       this.notDragging = false;
+    }
+    if (!(Math.abs(deltaX) > this.dragThreshold || Math.abs(deltaY) > this.dragThreshold)) {
+      return null;
     }
     const x = this.getDrag(this.currentFloor.pageWidth, engine.canvasWidth / 2, deltaX, this.camera.pos.x);
     const y = this.getDrag(this.currentFloor.pageHeight, engine.canvasHeight / 2, deltaY, this.camera.pos.y);
@@ -102,6 +114,20 @@ export class GameScreen extends Scene {
 
         const foundRoom = this.currentFloor.getRoom(x, y);
         this.onClick(foundRoom);
+      }
+    });
+  }
+
+  setupKeyboard(engine: Engine) {
+    engine.input.keyboard.on('release', (ev: KeyEvent) => {
+      if (ev.key === Input.Keys.D) {
+        if (this.debugUI) {
+          this.remove(this.debugUI);
+          this.debugUI = null;
+        } else {
+          this.debugUI = new DebugUI(this);
+          this.add(this.debugUI);
+        }
       }
     });
   }

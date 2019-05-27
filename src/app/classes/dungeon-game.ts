@@ -28,7 +28,6 @@ export class DungeonGame {
     console.log('starting game');
     const loader = this.getLoader();
     return this.engine.start(loader).then((data) => {
-      console.log(data);
       this.engine.goToScene('mainmenu');
     },
     error => {
