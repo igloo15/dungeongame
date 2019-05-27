@@ -1,9 +1,14 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<mat-toolbar>
+<mat-toolbar class="mat-elevation-z6 game-toolbar">
   <button mat-icon-button>
       <mat-icon>dehaze</mat-icon>
   </button>
   <span class="app-title">Dungeon Game</span>
+  <mat-divider></mat-divider>
+  <button mat-button [matMenuTriggerFor]="appMenu">File</button>
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="clickSave()">Save</button>
+  </mat-menu>
   <span class="expanding-item"></span>
   <span>Version: {{Version}}</span>
 </mat-toolbar>

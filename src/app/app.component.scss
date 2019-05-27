@@ -24,7 +24,18 @@ h1 {
 }
 
 .dungeon-container {
-  height: calc(100vh - 64px);
+  height: calc(100vh - 40px);
 }
 
+.game-toolbar {
+  max-height: 40px;
+  height: 40px;
+}
 
+.game-toolbar mat-divider {
+  margin-left: 15px;
+  margin-right: 5px;
+  height: 100%;
+  width: 1px;
+  background-color: white
+}

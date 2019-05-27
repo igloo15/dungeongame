@@ -19,6 +19,6 @@ export class DungeonGameData extends JsonConvertable {
         floor.dungeonRooms.push(new DungeonRoom(j, i));
       }
     }
-    floor.dungeonRooms[floor.getCenter()].isDug = true;
+    floor.dungeonRooms[floor.center].isDug = true;
   }
 }

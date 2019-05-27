@@ -20,10 +20,6 @@ export class DungeonRoom extends JsonConvertable {
     this.y = y;
     this.isDug = isDug;
   }
-
-  getTile(map: DungeonTileFloor) {
-    return new DungeonTile(this, map);
-  }
 }
 
 export class DungeonTile extends TileSprite {

@@ -21,6 +21,10 @@ export class DungeonService {
   }
 
   loadGame() {
-    this.gameData = this.localStorageService.get<DungeonGameData>(this.gameDataKey);
+    this.gameData = this.localStorageService.get(this.gameDataKey) as DungeonGameData;
+  }
+
+  saveGame() {
+    this.localStorageService.set(this.gameDataKey, this.gameData);
   }
 }

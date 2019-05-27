@@ -25,7 +25,7 @@ export class GameScreen extends Scene {
     this.setupZooming(engine);
     this.setupMouseClicking(engine);
     this.setupKeyboard(engine);
-    this.currentFloor = this.dungeonService.gameData.dungeonFloors[0].getTileFloor(this.dungeonService);
+    this.currentFloor = new DungeonTileFloor(this.dungeonService.gameData.dungeonFloors[0], this.dungeonService);
 
     this.currentFloor.intialize();
     this.addTileMap(this.currentFloor);

@@ -13,14 +13,6 @@ export class DungeonFloor extends JsonConvertable {
     super();
     this.center = (Math.floor(this.width / 2) * this.height) + Math.round(this.height / 2);
   }
-
-  getTileFloor(service: DungeonService) {
-    return new DungeonTileFloor(this, service);
-  }
-
-  getCenter() {
-    return this.center;
-  }
 }
 
 export class DungeonTileFloor extends TileMap {
@@ -53,7 +45,7 @@ export class DungeonTileFloor extends TileMap {
       new SpriteSheet(sheet.texture, sheet.columns, sheet.rows, DungeonTile.width, DungeonTile.height));
     });
     this.floor.dungeonRooms.forEach(room => {
-      this.dungeonRooms.push(room.getTile(this));
+      this.dungeonRooms.push(new DungeonTile(room, this));
     });
   }
 
@@ -70,7 +62,7 @@ export class DungeonTileFloor extends TileMap {
   }
 
   getCenter() {
-    return this.floor.getCenter();
+    return this.floor.center;
   }
 
   getCenterTile() {
